@@ -1,0 +1,24 @@
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore virtual environments
+venv/
+.env
+
+# Ignore large data and output directories
+data/
+output/
+
+# Ignore editor-specific files
+.vscode/
+.idea/
+
+
+# Ignore model weights
+*.gguf
+
+._*
+
+.DS_Store
