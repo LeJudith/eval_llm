@@ -1,5 +1,7 @@
 import json
-import tqdm
+import spacy
+
+from tqdm import tqdm
 import numpy as np
 from bert_score import BERTScorer
 from pycocoevalcap.bleu.bleu import Bleu
@@ -7,7 +9,8 @@ from pycocoevalcap.cider.cider import Cider
 from pycocoevalcap.meteor.meteor import Meteor
 from pycocoevalcap.rouge.rouge import Rouge
 from sentence_transformers import SentenceTransformer
-from evaluation_llm.src.extractor import KeywordExtractor
+from sentence_transformers import util
+from src.extractor import KeywordExtractor
 
 
 def jaccard_index_dictionary(original_texts, generated_texts, dict_path):
@@ -82,7 +85,7 @@ def jaccard_index_scispacy(reports_true, reports_pred):
             union = len(set(keywords_true).union(set(keywords_pred)))
             jaccard_indices.append(intersection / union)
 
-    print(np.mean(np.array(jaccard_indices)))
+    #print(np.mean(np.array(jaccard_indices)))
     return jaccard_indices
 
 
@@ -111,7 +114,7 @@ def cosine_similarity_biobert(reports_true, reports_pred):
         cosine_similarities.append(
             util.pytorch_cos_sim(embedding_true, embedding_pred).item()
         )
-        print(np.mean(np.array(cosine_similarities)))
+       # print(np.mean(np.array(cosine_similarities)))
 
     return cosine_similarities
 
@@ -145,14 +148,14 @@ def machine_translation_metrics(reports_true, reports_pred):
         # scores_m.append(score_m)
         scores_r.append(score_r)
 
-        print(
-            f"Score: {{"
-            f"{np.mean(np.array(scores_b)) * 100}, "
-            f"{np.mean(np.array(scores_c)) * 100}, "
-            #  f"{np.mean(np.array(scores_m)) * 100}, "
-            f"{np.mean(np.array(scores_r)) * 100}"
-            f"}}"
-        )
+        # print(
+        #     f"Score: {{"
+        #     f"{np.mean(np.array(scores_b)) * 100}, "
+        #     f"{np.mean(np.array(scores_c)) * 100}, "
+        #     #  f"{np.mean(np.array(scores_m)) * 100}, "
+        #     f"{np.mean(np.array(scores_r)) * 100}"
+        #     f"}}"
+        # )
 
     return scores_b, scores_c, scores_r  # scores_m
 
@@ -168,14 +171,14 @@ def bert_score_metric(reports_true, reports_pred):
 
         p, r, f1 = scorer.score([text_true], [text_pred])
 
-        p_list.append(p.cpu().numpy())
-        r_list.append(r.cpu().numpy())
-        f1_list.append(f1.cpu().numpy())
+        p_list.append(p.cpu().numpy().item())
+        r_list.append(r.cpu().numpy().item())
+        f1_list.append(f1.cpu().numpy().item())
 
-        print(
-            np.mean(np.array(p_list)),
-            np.mean(np.array(r_list)),
-            np.mean(np.array(f1_list)),
-        )
+        # print(
+        #     np.mean(np.array(p_list)),
+        #     np.mean(np.array(r_list)),
+        #     np.mean(np.array(f1_list)),
+        # )
 
     return p_list, r_list, f1_list
