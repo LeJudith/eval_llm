@@ -1,0 +1,55 @@
+# Ignore model weights
+*.gguf
+
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore virtual environments
+venv/
+env/
+.venv/
+
+# Ignore logs and temp files
+*.log
+*.txt
+*.out
+*.tmp
+
+# Ignore OS-specific files
+.DS_Store
+Thumbs.db
+
+# Ignore version control directories
+.git/
+.gitignore
+.hg/
+.svn/
+
+# Ignore Docker-related files (except the Dockerfile)
+.dockerignore
+docker-compose.yml
+
+# Ignore node_modules (if you have frontend code)
+node_modules/
+
+# Ignore large data files
+#data/
+#output/
+
+# Ignore environment files (if not needed inside the container)
+.env
+
+# Ignore build artifacts
+build/
+dist/
+
+# Ignore code editor/project files
+.vscode/
+.idea/
+*.swp
