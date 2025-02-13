@@ -22,20 +22,25 @@ ENV PATH /opt/conda/envs/evaluator/bin:$PATH
 
 # Copy the application code
 COPY . /usr/src/app 
-# #since it is currently a private repository you need the GITHUB ACCES TOKEN
-# RUN rm -rf /usr/src/app/* &&  git clone https://LeJudith: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@github.com/LeJudith/medical-report-processor.git /usr/src/app
 
 RUN ls -la /usr/src/app
 
 #activate conda environment
 RUN conda run --no-capture-output -n evaluator python 
+#RUN conda run -n evaluator python3 -m spacy download en_core_web_sm
 
 # Set the environment variable to avoid bufferng
 ENV PYTHONUNBUFFERED=1
+#set Pythonpath
+ENV PYTHONPATH="${PYTHONPATH}:/usr/src/app/eval_llm/"
+ENV HF_HOME=/root/.cache/
+
+# to run docker interactively
+EXPOSE 22 6006 8888
 
 # Set the entry point to use the conda environment and run the script
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "evaluator","python3", "src/evaluate.py"]
 
-ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "evaluator"]
-
-#CMD to allow for different commands to be passed when running the container, prevents that the container exits immediately once started
-CMD ["bash"]
+#CMD to allow for different commands to be passed when running the container, prevents that the container exits immediately once started #CMD ["--help"]
+#CMD ["bash"]
+CMD ["--help"]

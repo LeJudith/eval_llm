@@ -44,7 +44,7 @@ original_text2,generated_text2
 - **`jaccard_index_dictionary`**: Calculates the Jaccard Index based on a custom dictionary of keywords.
 - **`jaccard_index_scispacy`**: Uses the SciSpacy model to calculate the Jaccard Index, focusing on biomedical entities.
 - **`cosine_similarity_biobert`**: Measures cosine similarity using BioBERT embeddings, suitable for biomedical text comparisons.
-- **`machine_translation_metrics`**: Evaluates using machine translation metrics like BLEU, ROUGE, CIDER,METEOR, commonly used in translation quality assessment.
+- **`machine_translation_metrics`**: Evaluates using machine translation metrics like BLEU (1-4), ROUGE, CIDER, METEOR, commonly used in translation quality assessment.
 - **`bert_score_metric`**: Computes BERTScore, which uses contextual embeddings for a more semantic similarity measure.
 
 ### Example Command
@@ -67,10 +67,14 @@ There will be two JSON output files generated `results.json` which contains the 
 {
   "jaccard_index_dictionary_mean": "score",
   "jaccard_index_scispacy_mean": "score",
-  "cosinecosine_similarity_biobert_mean": "score",
-  "BLEU_mean": "score",
+  "cosine_similarity_biobert_mean": "score",
+  "BLEU-1_mean": "score",
+  "BLEU-2_mean": "score",
+  "BLEU-3_mean": "score",
+  "BLEU-4_mean": "score",
   "Cider_mean": "score",
-  "ROUGE_mean": "score",
+  "ROUGE-L_mean": "score",
+  "Meteor_mean": "score",
   "Bertscore_p_mean": "score",
   "Bertscore_r_mean": "score",
   "Bertscore_f1_mean": "score",
@@ -95,10 +99,8 @@ conda activate translator
 Run the Script:
 
 ```bash
-python src/evaluate.py  path_to_input/input.csv  path_to_output
+python src/evaluate.py  path_to_input/input.csv  path_to_output_dir/
 ```
-export HF_HOME=/root/.cache/
-
 
 
 ### Building Docker Image 
@@ -120,7 +122,7 @@ docker build -t evaluator:latest .
 #SBATCH --container-image="tag"
 
 # Run the Python script with arguments
-python src/evaluate.py /data_dir/data.csv /data_dir/output 
+python src/evaluate.py /data_dir/data.csv /data_dir/output_dir/ 
 ```
 ## License
 This project is licensed under the MIT License.
