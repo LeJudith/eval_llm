@@ -1,4 +1,3 @@
-
 # Evaluation Metrics for Large Language Models (LLMs)
 
 This tool evaluates the performance of Large Language Models (LLMs) using various metrics to quantify the similarity and quality of generated texts compared to reference texts. It supports multiple metrics, including Jaccard Index, cosine similarity, BERTScore, and machine translation metrics, tailored to compare biomedical or domain-specific texts. 
@@ -9,11 +8,6 @@ This tool evaluates the performance of Large Language Models (LLMs) using variou
 - Input files can be in CSV or JSON format.
 - Saves metric results in a user-defined JSON output file.
 
-## Installation
-Ensure you have Python and necessary dependencies installed. Install required packages using:
-```bash
-pip install -r requirements.txt
-```
 
 ## Usage
 
@@ -55,32 +49,79 @@ original_text2,generated_text2
 
 ### Example Command
 
-To run the evaluation with all metrics:
+To run the evaluation with all metrics and the default dictionary:
 ```bash
-python evaluate.py --input_file path/to/input.csv --output_dir path/to/output
+python src/evaluate.py  path_to_input/input.csv  path_to_output
 ```
 
-To specify metrics and use a custom dictionary:
+To specify specfic metrics and use a custom dictionary:
 
 ```bash
-python evaluate.py --input_file path/to/input.json --output_dir path/to/output.csv --dict_path path/to/dictionary.json --metrics jaccard_index_dictionary bert_score_metric 
+python evaluate.py  path/to/input.json  path/to/output_dir/ --dict-path path/to/dictionary.json  --metrics bert_score_metric --metrics machine_translation_metics
+``` 
+
+### Output
+There will be two JSON output files generated `results.json` which contains the results for each metric computed on each input text pair, as well as `results_averaged.json` which contains the results averaged results across all report pairs computed for each metrics. For example for the default configuration, `results_averaged.json` will look like this:
+
+```json
+{
+  "jaccard_index_dictionary_mean": "score",
+  "jaccard_index_scispacy_mean": "score",
+  "cosinecosine_similarity_biobert_mean": "score",
+  "BLEU_mean": "score",
+  "Cider_mean": "score",
+  "ROUGE_mean": "score",
+  "Bertscore_p_mean": "score",
+  "Bertscore_r_mean": "score",
+  "Bertscore_f1_mean": "score",
+  
+}
+
 ```
+## Local or for ARM users
 
-## Output
-The output file will contain the results for each metric computed on each input text pair, stored in CSV or JSON format, depending on your choice. Each row will correspond to a text pair with the computed metric scores.
+Steps to Install Locally:
+Install Conda (e.g., Miniconda or Anaconda).
 
-## Dependencies
-- Python 3.x
-- SpaCy
-- SciSpacy
-- BioBERT and other relevant models from Hugging Face's `transformers` library
-- BERTScore, ROUGE, BLEU (for machine translation metrics)
-
-Install dependencies by running:
+Create the Environment:
 ```bash
-pip install -r requirements.txt
+conda env create -f environment.yml
+```
+Activate the Environment:
+```bash
+conda activate translator
 ```
 
+Run the Script:
+
+```bash
+python src/evaluate.py  path_to_input/input.csv  path_to_output
+```
+export HF_HOME=/root/.cache/
+
+
+
+### Building Docker Image 
+Navigate to the Dockerfile and then run: 
+
+```bash
+docker build -t evaluator:latest .
+```
+
+## Running the script with SLURM
+```bash
+#!/bin/bash
+#SBATCH --ntasks=1
+#SBATCH --gpus-per-task=1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=8G
+#SBATCH --time=4:00:00
+#SBATCH --container-mounts=/path_to_data_dir/:/data_dir/
+#SBATCH --container-image="tag"
+
+# Run the Python script with arguments
+python src/evaluate.py /data_dir/data.csv /data_dir/output 
+```
 ## License
 This project is licensed under the MIT License.
 
